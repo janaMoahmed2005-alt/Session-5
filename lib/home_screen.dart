@@ -1,149 +1,214 @@
-import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/app_assets.dart';
+import 'package:flutter_application_1/custom_text_field.dart';
+import 'package:flutter_application_1/routes.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
- const HomeScreen({super.key, required String title});
+  const HomeScreen({super.key, required this.title});
+
+  final String title;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int counter = 0;
-  void incrementCounter() {
-    setState(() {
-      counter++;
-    });
+  final TextEditingController controller = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-    log("Increment button clicked");
-    log("Counter Value: $counter");
-  }
+  final formKey = GlobalKey<FormState>();
 
-  void decrementCounter() {
-    setState(() {
-      counter--;
-    });
+  final passwordRegex = RegExp(
+    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+    caseSensitive: false,
+  );
 
-    log("Decrement button clicked");
-    log("Counter Value: $counter");
-  }
+  final emailRegex = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    caseSensitive: false,
+  );
+
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    floatingActionButton: FloatingActionButton(
-        onPressed: incrementCounter,
-        child: Icon(Icons.add),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(),
+
+      body: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: 200,
+            child: CachedNetworkImage(
+              imageUrl:
+                  "https://cdn.dribbble.com/userupload/14381487/file/original-cec8fd1c7fc0b691082dd57d5da9d8a6.png",
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(16),
+
+            child: Form(
+              key: formKey,
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16,
+                children: [
+                  const Text(
+                    'Sign in to SO',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 54,
+
+                    child: ElevatedButton(
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        side: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                        backgroundColor: Colors.black,
+                      ),
+
+                      onPressed: () {
+                        // Handle event button press
+                      },
+
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl:
+                                "https://logo-teka.com/wp-content/uploads/2025/06/google-logo.png",
+                            width: 24,
+                            height: 24,
+                          ),
+
+                          const SizedBox(width: 8),
+
+                          const Text(
+                            'Sign in with Google',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 16,
+                    children: [
+                      const Text(
+                        'Enter your email',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      CustomTextField(
+                        controller: emailController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Password',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+
+                              TextButton(
+                                onPressed: () {
+                                  // Forgot password action
+                                },
+                                child: const Text(
+                                  'Forget?',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          CustomTextField(
+                            controller: controller,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 54,
+
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            backgroundColor: Colors.white,
+                          ),
+
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              context.pushNamed(Routes.signUpScreen);
+                            }
+                          },
+
+                          child: const Text(
+                            'Sign In',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-    
-    appBar: AppBar(
-      title: Text("Home Screen"),
-      centerTitle: true,
-
-      leading: Icon(
-        Icons.settings,
-        color:  Color.fromARGB(255, 67, 65, 57),
-      ),
-
-      actions: [
-        IconButton(
-            onPressed: decrementCounter,
-            icon: Icon(Icons.remove),
-          ),
-      ],
-    ),
-
-    body: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children:[
-        Container(
-          height: 100,
-          width: 100,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.amber,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Increment Value",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Icon(
-                Icons.add,
-                size: 20,
-                color: Colors.black,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(width: 10),
-        Container(
-          height: 100,
-          width: 100,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.amber,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Counter",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                "$counter",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(width: 10),
-        Container(
-          height: 100,
-          width: 100,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.amber,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Decrement Value",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Icon(
-                Icons.remove,
-                size: 20,
-                color: Colors.black,
-              ),
-            ],
-          ),
-        ),
-      ],
-      
-    ),
-    
-  );
-  
+    );
+  }
 }
-}
-              
