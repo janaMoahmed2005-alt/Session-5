@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app_assets.dart';
 import 'package:flutter_application_1/custom_text_field.dart';
 import 'package:flutter_application_1/routes.dart';
+import 'package:flutter_application_1/theme_cubit.dart';
+import 'package:flutter_application_1/theme_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(),
 
       body: Column(
@@ -61,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Text(
                     'Sign in to SO',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -80,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.white,
                           width: 2,
                         ),
-                        backgroundColor: Colors.black,
+                        backgroundColor: const Color.fromARGB(255, 0, 88, 204),
                       ),
 
                       onPressed: () {
@@ -118,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Text(
                         'Enter your email',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -143,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const Text(
                                 'Password',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -155,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: const Text(
                                   'Forget?',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
@@ -183,24 +186,74 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor: const Color.fromARGB(255, 0, 88, 204),
                           ),
 
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              context.pushNamed(Routes.signUpScreen);
+                              
                             }
                           },
 
                           child: const Text(
                             'Sign In',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
+                      SizedBox(
+  width: double.infinity,
+  height: 54,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    spacing: 16,
+    children: [
+      const Text(
+        'Don\'t have an account?',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+
+      FilledButton(
+        style: FilledButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          backgroundColor: const Color.fromARGB(255, 24, 0, 84),
+        ),
+        onPressed: () {
+          if (formKey.currentState!.validate()) {
+            context.pushNamed(Routes.signUpScreen);
+          }
+        },
+        child: const Text(
+          'Sign Up',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
+BlocBuilder<ThemeCubit, ThemeState>(
+  builder: (context, state) {
+    return Switch(
+      value: state.isDark,
+      onChanged: (value) {
+        context.read<ThemeCubit>().toggleTheme();
+      },
+    );
+  },
+),
                     ],
                   ),
                 ],

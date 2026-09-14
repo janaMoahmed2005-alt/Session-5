@@ -18,7 +18,7 @@ class _signUpScreenState extends State<signUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(),
 
       body: Column(
@@ -37,7 +37,7 @@ class _signUpScreenState extends State<signUpScreen> {
                 Text(
                   'Sign In',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -51,7 +51,7 @@ class _signUpScreenState extends State<signUpScreen> {
                     const Text(
                       'New user?',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
 
@@ -76,7 +76,7 @@ class _signUpScreenState extends State<signUpScreen> {
               TextFormField(
                 controller: emailController,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   hintText: 'Enter your email',
@@ -103,7 +103,7 @@ class _signUpScreenState extends State<signUpScreen> {
                 height: 54,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 0, 88, 204),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -116,7 +116,7 @@ class _signUpScreenState extends State<signUpScreen> {
                   child: const Text(
                     'Continue',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

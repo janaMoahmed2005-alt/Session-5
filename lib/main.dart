@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app_router.dart';
+import 'package:flutter_application_1/app_theme.dart';
 import 'package:flutter_application_1/home_screen.dart';
+import 'package:flutter_application_1/theme_cubit.dart';
+import 'package:flutter_application_1/theme_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,14 +16,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router( //materialApp ia widget 
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+    return BlocProvider(
+      create: (context) => ThemeCubit(),
+
+    child: BlocBuilder<ThemeCubit, ThemeState>(builder: (context, state) {
+      return MaterialApp.router(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: state.isDark ? AppTheme().Darktheme() : AppTheme().Lighttheme(),
       routerConfig: AppRouter.appRouter,
+    );
+    },
+    ),
     );
   }
 }
