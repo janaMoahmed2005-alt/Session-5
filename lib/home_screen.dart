@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(),
 
       body: Column(
@@ -61,10 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16,
                 children: [
-                  const Text(
+                   Text(
                     'Sign in to SO',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -79,11 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                        backgroundColor: const Color.fromARGB(255, 0, 88, 204),
+                        // side: const BorderSide(
+                        //   color: Colors.white,
+                        //   width: 2,
+                        // ),
+                        backgroundColor:Theme.of(context).colorScheme.primary,
                       ),
 
                       onPressed: () {
@@ -118,10 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 16,
                     children: [
-                      const Text(
+                       Text(
                         'Enter your email',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -143,10 +143,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                               Text(
                                 'Password',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -155,10 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onPressed: () {
                                   // Forgot password action
                                 },
-                                child: const Text(
+                                child:  Text(
                                   'Forget?',
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: Theme.of(context).colorScheme.secondary,
                                   ),
                                 ),
                               ),
@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            backgroundColor: const Color.fromARGB(255, 0, 88, 204),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                           ),
 
                           onPressed: () {
@@ -211,10 +211,10 @@ class _HomeScreenState extends State<HomeScreen> {
     mainAxisAlignment: MainAxisAlignment.center,
     spacing: 16,
     children: [
-      const Text(
+      Text(
         'Don\'t have an account?',
         style: TextStyle(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
@@ -225,12 +225,12 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          backgroundColor: const Color.fromARGB(255, 24, 0, 84),
+          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
-          if (formKey.currentState!.validate()) {
-            context.pushNamed(Routes.signUpScreen);
-          }
+          // if (formKey.currentState!.validate()) {
+             context.pushNamed(Routes.signUpScreen);
+          // }
         },
         child: const Text(
           'Sign Up',

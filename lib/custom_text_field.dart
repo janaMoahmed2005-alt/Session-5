@@ -27,7 +27,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color.fromARGB(255, 72, 72, 72),
+                  fillColor:Theme.of(context).colorScheme.tertiary,
                   
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(4),

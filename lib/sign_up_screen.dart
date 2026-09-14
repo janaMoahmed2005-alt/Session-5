@@ -18,7 +18,7 @@ class _signUpScreenState extends State<signUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(),
 
       body: Column(
@@ -37,7 +37,7 @@ class _signUpScreenState extends State<signUpScreen> {
                 Text(
                   'Sign In',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.secondary,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -48,10 +48,10 @@ class _signUpScreenState extends State<signUpScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text(
+                     Text(
                       'New user?',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
 
@@ -80,11 +80,11 @@ class _signUpScreenState extends State<signUpScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: 'Enter your email',
-                  hintStyle: const TextStyle(
-                    color: Colors.grey,
+                  hintStyle:  TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   filled: true,
-                  fillColor: const Color.fromARGB(255, 0,0,0),
+                  fillColor: Theme.of(context).colorScheme.tertiary,
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -103,7 +103,7 @@ class _signUpScreenState extends State<signUpScreen> {
                 height: 54,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 0, 88, 204),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -136,7 +136,7 @@ class _signUpScreenState extends State<signUpScreen> {
                           color: Colors.white,
                           width: 2,
                         ),
-                        backgroundColor: Colors.black,
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
                       ),
 
                       onPressed: () {
@@ -155,10 +155,10 @@ class _signUpScreenState extends State<signUpScreen> {
 
                           const SizedBox(width: 8),
 
-                          const Text(
+                           Text(
                             'Sign in with Google',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -181,7 +181,7 @@ class _signUpScreenState extends State<signUpScreen> {
                           color: Colors.white,
                           width: 2,
                         ),
-                        backgroundColor: Colors.black,
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
                       ),
 
                       onPressed: () {
@@ -200,10 +200,10 @@ class _signUpScreenState extends State<signUpScreen> {
 
                           const SizedBox(width: 8),
 
-                          const Text(
+                           Text(
                             'Sign in with FaceBook',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -227,7 +227,7 @@ class _signUpScreenState extends State<signUpScreen> {
                           color: Colors.white,
                           width: 2,
                         ),
-                        backgroundColor: Colors.black,
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
                       ),
 
                       onPressed: () {
@@ -246,10 +246,10 @@ class _signUpScreenState extends State<signUpScreen> {
 
                           const SizedBox(width: 8),
 
-                          const Text(
+                           Text(
                             'Sign in with Apple',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -263,7 +263,7 @@ class _signUpScreenState extends State<signUpScreen> {
       ),
       SizedBox(
             width: double.infinity,
-            height: 200,
+            // height: 200,
             child: CachedNetworkImage(
               imageUrl:
                   "https://images.squarespace-cdn.com/content/v1/64961943d515bc438d50134d/1690572059449-69Z4WVD6DBUWECK4NF46/Pavlov_LegalShield_Thumbnail.png",
