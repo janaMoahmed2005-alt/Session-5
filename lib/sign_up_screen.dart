@@ -110,7 +110,9 @@ class _signUpScreenState extends State<signUpScreen> {
                   ),
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      // Continue action
+                              context.pushNamed(Routes.productScreen, queryParameters: {
+                                "title": "Product Screen",
+                              });
                     }
                   },
                   child: const Text(

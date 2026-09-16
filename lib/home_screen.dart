@@ -191,7 +191,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              
+                              context.pushNamed(Routes.productScreen, queryParameters: {
+                                "title": "Product Screen",
+                              });
                             }
                           },
 
