@@ -12,7 +12,7 @@ class ProductService {
         throw Exception();
       }
       return ProductResponse.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException {
        throw Exception();
     }
   }

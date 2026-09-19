@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/routes.dart';
+import 'package:flutter_application_1/app/routes.dart';
 import 'package:go_router/go_router.dart';
 
 class signUpScreen extends StatefulWidget {

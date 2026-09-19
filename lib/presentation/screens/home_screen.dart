@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/app_assets.dart';
-import 'package:flutter_application_1/custom_text_field.dart';
-import 'package:flutter_application_1/routes.dart';
-import 'package:flutter_application_1/theme_cubit.dart';
-import 'package:flutter_application_1/theme_state.dart';
+import 'package:flutter_application_1/core/utils/app_assets.dart';
+import 'package:flutter_application_1/core/widget/custom_text_field.dart';
+import 'package:flutter_application_1/app/routes.dart';
+import 'package:flutter_application_1/core/cubit/theme/theme_cubit.dart';
+import 'package:flutter_application_1/core/cubit/theme/theme_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

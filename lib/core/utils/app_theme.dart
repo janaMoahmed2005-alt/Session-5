@@ -11,6 +11,7 @@ class AppTheme {
         primary: const Color.fromARGB(255, 52, 49, 215),
         secondary:Colors.black,
         tertiary: const Color.fromARGB(255, 178, 178, 178),
+        
       ),
     );
   }
