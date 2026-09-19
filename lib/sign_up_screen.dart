@@ -1,278 +1,406 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app/routes.dart';
 import 'package:go_router/go_router.dart';
 
-class signUpScreen extends StatefulWidget {
-  const signUpScreen({super.key});
+import 'package:flutter_application_1/auth_service.dart';
+//import 'package:flutter_application_1/routes.dart';
+
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<signUpScreen> createState() => _signUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _signUpScreenState extends State<signUpScreen> {
-  final TextEditingController emailController = TextEditingController();
+class _SignUpScreenState extends State<SignUpScreen> {
+  // =========================
+  // Form Key
+  // =========================
 
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  // =========================
+  // Controllers
+  // =========================
+
+  final TextEditingController emailController =
+      TextEditingController();
+
+  final TextEditingController passwordController =
+      TextEditingController();
+
+  final TextEditingController firstNameController =
+      TextEditingController();
+
+  final TextEditingController lastNameController =
+      TextEditingController();
+
+  // =========================
+  // Auth Service
+  // =========================
+
+  final AuthService authService = AuthService();
+
+  // =========================
+  // Loading
+  // =========================
+
+  bool isLoading = false;
+
+  // =========================
+  // Dispose
+  // =========================
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+
+    super.dispose();
+  }
+
+  // =========================
+  // Build
+  // =========================
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Sign Up'),
+        centerTitle: true,
+      ),
 
-      body: Column(
-        children: [
-      Padding(
-        padding: const EdgeInsets.all(16),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
 
-        child: Form(
-          key: formKey,
+          child: Form(
+            key: formKey,
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16,
-            children: [
-             
-                Text(
-                  'Sign In',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+
+              children: [
+
+                // =========================
+                // Title
+                // =========================
+
+                const Text(
+                  'Create Account',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 30,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              
 
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                const SizedBox(height: 30),
+
+                // =========================
+                // First Name
+                // =========================
+
+                TextFormField(
+                  controller: firstNameController,
+
+                  decoration: InputDecoration(
+                    hintText: 'Enter your first name',
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).colorScheme.tertiary,
+                  ),
+
+                  validator: (value) {
+                    if (value == null ||
+                        value.trim().isEmpty) {
+                      return 'Please enter your first name';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                // =========================
+                // Last Name
+                // =========================
+
+                TextFormField(
+                  controller: lastNameController,
+
+                  decoration: InputDecoration(
+                    hintText: 'Enter your last name',
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).colorScheme.tertiary,
+                  ),
+
+                  validator: (value) {
+                    if (value == null ||
+                        value.trim().isEmpty) {
+                      return 'Please enter your last name';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                // =========================
+                // Email
+                // =========================
+
+                TextFormField(
+                  controller: emailController,
+
+                  keyboardType: TextInputType.emailAddress,
+
+                  decoration: InputDecoration(
+                    hintText: 'Enter your email',
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).colorScheme.tertiary,
+                  ),
+
+                  validator: (value) {
+                    if (value == null ||
+                        value.trim().isEmpty) {
+                      return 'Please enter your email';
+                    }
+
+                    final emailRegExp = RegExp(
+                      r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                    );
+
+                    if (!emailRegExp.hasMatch(
+                      value.trim(),
+                    )) {
+                      return 'Please enter a valid email';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                // =========================
+                // Password
+                // =========================
+
+                TextFormField(
+                  controller: passwordController,
+
+                  obscureText: true,
+
+                  decoration: InputDecoration(
+                    hintText: 'Enter your password',
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).colorScheme.tertiary,
+                  ),
+
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 25),
+
+                // =========================
+                // Continue Button
+                // =========================
+
+                SizedBox(
+                  height: 50,
+
+                  child: ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            // =========================
+                            // Validate
+                            // =========================
+
+                            if (!formKey.currentState!
+                                .validate()) {
+                              return;
+                            }
+
+                            // =========================
+                            // Start Loading
+                            // =========================
+
+                            setState(() {
+                              isLoading = true;
+                            });
+
+                            try {
+                              // =========================
+                              // Register User
+                              // =========================
+
+                              final success =
+                                  await authService.register(
+                                email:
+                                    emailController.text.trim(),
+                                password:
+                                    passwordController.text,
+                                firstName:
+                                    firstNameController.text.trim(),
+                                lastName:
+                                    lastNameController.text.trim(),
+                              );
+
+                              if (!mounted) return;
+
+                              // =========================
+                              // Registration Successful
+                              // =========================
+
+                              if (success) {
+                                print('ACCOUNT CREATED');
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Account created successfully. Check your email for the verification code.',
+                                    ),
+                                  ),
+                                );
+
+                                // =========================
+                                // Go To Verification Screen
+                                // =========================
+
+                                context.pushNamed(
+                                  Routes.verificationScreen,
+                                  queryParameters: {
+                                    'email':
+                                        emailController.text.trim(),
+                                  },
+                                );
+                              }
+
+                              // =========================
+                              // Registration Failed
+                              // =========================
+
+                              else {
+                                print(
+                                  'ACCOUNT CREATION FAILED',
+                                );
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Registration failed. Please try again.',
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+
+                            // =========================
+                            // Other Error
+                            // =========================
+
+                            catch (e) {
+                              if (!mounted) return;
+
+                              print(
+                                'SIGN UP ERROR: $e',
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Something went wrong',
+                                  ),
+                                ),
+                              );
+                            }
+
+                            // =========================
+                            // Stop Loading
+                            // =========================
+
+                            finally {
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            }
+                          },
+
+                    child: isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text(
+                            'Continue',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+          
+
+                const SizedBox(height: 20),
+
+                // =========================
+                // Already have account?
+                // =========================
+
+                Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center,
+
                   children: [
-                     Text(
-                      'New user?',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
+                    const Text(
+                      'Already have an account? ',
                     ),
 
                     TextButton(
                       onPressed: () {
-                        context.goNamed(Routes.homeScreen);
+                        context.pop();
                       },
+
                       child: const Text(
-                        'Create an account',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        'Login',
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              
-
-              TextFormField(
-                controller: emailController,
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle:  TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.tertiary,
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-
-              Align(alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: 200,
-                height: 54,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                              context.pushNamed(Routes.productScreen, queryParameters: {
-                                "title": "Product Screen",
-                              });
-                    }
-                  },
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              ),
-              SizedBox(
-                    width: double.infinity,
-                    height: 54,
-
-                    child: ElevatedButton(
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      ),
-
-                      onPressed: () {
-                        // Handle event button press
-                      },
-
-              child: Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                "https://logo-teka.com/wp-content/uploads/2025/06/google-logo.png",
-                            width: 24,
-                            height: 24,
-                          ),
-
-                          const SizedBox(width: 8),
-
-                           Text(
-                            'Sign in with Google',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ], 
-              ),
-                    ),
-              ),
-
-              //facebook sign in button
-              SizedBox(
-                    width: double.infinity,
-                    height: 54,
-
-                    child: ElevatedButton(
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      ),
-
-                      onPressed: () {
-                        // Handle event button press
-                      },
-
-              child: Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                "https://img.magnific.com/premium-vector/social-media-icon-illustration-facebook-facebook-icon-vector-illustration_561158-2134.jpg?semt=ais_hybrid&w=740&q=80",
-                            width: 24,
-                            height: 24,
-                          ),
-
-                          const SizedBox(width: 8),
-
-                           Text(
-                            'Sign in with FaceBook',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ], 
-              ),
-                    ),
-              ),
-
-
-              //Apple sign in button
-              SizedBox(
-                    width: double.infinity,
-                    height: 54,
-
-                    child: ElevatedButton(
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        side: const BorderSide(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      ),
-
-                      onPressed: () {
-                        // Handle event button press
-                      },
-
-              child: Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                "https://www.clipartmax.com/png/middle/63-633340_apple-logo-apple-logo-png.png",
-                            width: 24,
-                            height: 24,
-                          ),
-
-                          const SizedBox(width: 8),
-
-                           Text(
-                            'Sign in with Apple',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ], 
-              ),
-                    ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      SizedBox(
-            width: double.infinity,
-            // height: 200,
-            child: CachedNetworkImage(
-              imageUrl:
-                  "https://images.squarespace-cdn.com/content/v1/64961943d515bc438d50134d/1690572059449-69Z4WVD6DBUWECK4NF46/Pavlov_LegalShield_Thumbnail.png",
-              fit: BoxFit.cover,
+              ],
             ),
           ),
-        ], 
+        ),
       ),
     );
   }

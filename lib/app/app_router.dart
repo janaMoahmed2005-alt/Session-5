@@ -7,6 +7,7 @@ import 'package:flutter_application_1/presentation/cubit/products/product_cubit.
 import 'package:flutter_application_1/presentation/screens/product_details_screen.dart';
 import 'package:flutter_application_1/presentation/screens/product_screen.dart';
 import 'package:flutter_application_1/app/routes.dart';
+import 'package:flutter_application_1/presentation/screens/verification_screen.dart';
 import 'package:flutter_application_1/sign_up_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -28,7 +29,20 @@ class AppRouter {
         path: "/${Routes.signUpScreen}",
         name: Routes.signUpScreen,
         builder: (context, state) {
-          return signUpScreen();
+          return SignUpScreen();
+        },
+      ),
+
+      GoRoute(
+        path: "/${Routes.verificationScreen}",
+        name: Routes.verificationScreen,
+        builder: (context, state) {
+          final String email =
+              state.uri.queryParameters['email'] ?? '';
+
+          return VerificationScreen(
+            email: email,
+          );
         },
       ),
       ShellRoute(builder: (context, state, child){
@@ -49,11 +63,11 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: "/${Routes.ProductDetailsScreen}",
-        name: Routes.ProductDetailsScreen,
+        path: "/${Routes.productDetailsScreen}",
+        name: Routes.productDetailsScreen,
         builder: (context, state) {
           final String? id = state.uri.queryParameters['id'];
-          return ProductDetailsScreen(productId: id ?? "");
+          return ProcductDetailsScreen(productId: id ?? "");
         },
       ),
       ]),
