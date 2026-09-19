@@ -1,5 +1,5 @@
 import 'package:flutter_application_1/domain/models/product_details_model.dart' as details_model;
-import 'package:flutter_application_1/data/models/products_model.dart';
+import 'package:flutter_application_1/domain/models/products_model.dart';
 class ProductState {}
 
 class ProductIntialState extends ProductState{}
