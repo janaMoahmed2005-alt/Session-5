@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_application_1/products_model.dart';
+import 'package:flutter_application_1/data/models/products_model.dart';
 
 class ProductService {
   ProductService();

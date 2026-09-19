@@ -1,7 +1,7 @@
 import 'package:flutter_application_1/domain/models/product_details_model.dart';
 import 'package:flutter_application_1/domain/repos/product_details_repo.dart';
 import 'package:flutter_application_1/presentation/cubit/products/product_state.dart';
-import 'package:flutter_application_1/product_service.dart';
+import 'package:flutter_application_1/data/data_source/impl/product_service.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 

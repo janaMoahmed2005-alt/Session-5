@@ -8,7 +8,7 @@ import 'package:flutter_application_1/presentation/screens/product_details_scree
 import 'package:flutter_application_1/presentation/screens/product_screen.dart';
 import 'package:flutter_application_1/app/routes.dart';
 import 'package:flutter_application_1/presentation/screens/verification_screen.dart';
-import 'package:flutter_application_1/sign_up_screen.dart';
+import 'package:flutter_application_1/presentation/screens/sign_up_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/presentation/screens/home_screen.dart';
@@ -58,8 +58,8 @@ class AppRouter {
         path: "/${Routes.productScreen}",
         name: Routes.productScreen,
         builder: (context, state) {
-          final String? title = state.uri.queryParameters['title'];
-          return ProductScreen(title: title ?? "");
+          //final String? title = state.uri.queryParameters['title'];
+          return ProductScreen(title: "Home Page");
         },
       ),
       GoRoute(

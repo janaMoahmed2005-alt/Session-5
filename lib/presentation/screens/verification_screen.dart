@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app/routes.dart';
-import 'package:flutter_application_1/auth_service.dart';
+import 'package:flutter_application_1/data/data_source/impl/auth_service.dart';
 //import 'package:flutter_application_1/routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
