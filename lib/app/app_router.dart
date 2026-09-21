@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 // import 'package:flutter_application_1/data/repos/product_details_repo_impl.dart';
 import 'package:flutter_application_1/injection_container.dart';
 import 'package:flutter_application_1/presentation/cubit/products/product_cubit.dart';
+import 'package:flutter_application_1/presentation/cubit/products/product_details_cubit.dart';
 import 'package:flutter_application_1/presentation/screens/product_details_screen.dart';
 import 'package:flutter_application_1/presentation/screens/product_screen.dart';
 import 'package:flutter_application_1/app/routes.dart';
@@ -45,32 +46,27 @@ class AppRouter {
           );
         },
       ),
-      ShellRoute(builder: (context, state, child){
-        return BlocProvider(
-          create: (context) => getIt<ProductCubit>(
-
-          ),
-          child: child,
-        );  
-      },
-        routes: [
-        GoRoute(
-        path: "/${Routes.productScreen}",
-        name: Routes.productScreen,
-        builder: (context, state) {
-          //final String? title = state.uri.queryParameters['title'];
-          return ProductScreen(title: "Home Page");
-        },
-      ),
       GoRoute(
-        path: "/${Routes.productDetailsScreen}",
-        name: Routes.productDetailsScreen,
-        builder: (context, state) {
-          final String? id = state.uri.queryParameters['id'];
-          return ProcductDetailsScreen(productId: id ?? "");
-        },
-      ),
-      ]),
+  path: "/${Routes.productScreen}",
+  name: Routes.productScreen,
+  builder: (context, state) {
+    return BlocProvider(
+      create: (_) => getIt<ProductCubit>()..fetchProducts(),
+      child: const ProductScreen(title: "Home Page"),
+    );
+  },
+),
+GoRoute(
+  path: "/${Routes.productDetailsScreen}",
+  name: Routes.productDetailsScreen,
+  builder: (context, state) {
+    final id = state.uri.queryParameters['id'] ?? "";
+    return BlocProvider(
+      create: (_) => getIt<ProductDetailsCubit>()..fetchDetails(id),
+      child: ProcductDetailsScreen(productId: id),
+    );
+  },
+),
       
     ],
   );

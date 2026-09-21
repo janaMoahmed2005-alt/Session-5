@@ -2,14 +2,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter_application_1/core/local_storage/base_local_storage.dart';
 import 'package:flutter_application_1/core/network/api/api_consumer.dart';
 import 'package:flutter_application_1/core/network/api/endpoints.dart';
+import 'package:flutter_application_1/data/data_source/abstract/product_data_source.dart';
+import 'package:flutter_application_1/data/data_source/impl/product_data_source_impl.dart';
 import 'package:flutter_application_1/data/data_source/abstract/product_details_data_source.dart';
 import 'package:flutter_application_1/data/data_source/impl/product_details_data_source_impl.dart';
 import 'package:flutter_application_1/data/external/dio/dio_consumer.dart';
 import 'package:flutter_application_1/data/external/dio/interceptor.dart';
 import 'package:flutter_application_1/data/external/dio/local_storage/shared_pref_impl.dart';
 import 'package:flutter_application_1/data/repos/product_details_repo_impl.dart';
+import 'package:flutter_application_1/data/repos/product_repo_impl.dart';
 import 'package:flutter_application_1/domain/repos/product_details_repo.dart';
+import 'package:flutter_application_1/domain/repos/product_repo.dart';
 import 'package:flutter_application_1/presentation/cubit/products/product_cubit.dart';
+import 'package:flutter_application_1/presentation/cubit/products/product_details_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,20 +50,29 @@ abstract class InjectionHelper {
   }
 
   static void injectDatasources() {
-    getIt.registerSingleton<ProductDetailsDataSource>(
-      ProductDetailsDataSourceImpl(dio: getIt<ApiConsumer>()),
-    );
-  }
+  getIt.registerSingleton<ProductDataSource>(
+    ProductDataSourceImpl(dio: getIt<ApiConsumer>()),
+  );
+  getIt.registerSingleton<ProductDetailsDataSource>(
+    ProductDetailsDataSourceImpl(dio: getIt<ApiConsumer>()),
+  );
+}
 
-  static void injectRepos() {
-    getIt.registerSingleton<ProductDetailsRepo>(
-      ProductDetailsRepoImpl(dataSource: getIt<ProductDetailsDataSource>()),
-    );
-  }
+static void injectRepos() {
+  getIt.registerSingleton<ProductRepo>(
+    ProductRepoImpl(dataSource: getIt<ProductDataSource>()),
+  );
+  getIt.registerSingleton<ProductDetailsRepo>(
+    ProductDetailsRepoImpl(dataSource: getIt<ProductDetailsDataSource>()),
+  );
+}
 
-  static void injectBlocs() {
-    getIt.registerFactory<ProductCubit>(() {
-      return ProductCubit(repo: getIt<ProductDetailsRepo>());
-    });
-  }
+static void injectBlocs() {
+  getIt.registerFactory<ProductCubit>(
+    () => ProductCubit(repo: getIt<ProductRepo>()),
+  );
+  getIt.registerFactory<ProductDetailsCubit>(
+    () => ProductDetailsCubit(repo: getIt<ProductDetailsRepo>()),
+  );
+}
 }

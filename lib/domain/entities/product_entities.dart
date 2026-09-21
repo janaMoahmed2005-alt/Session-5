@@ -1,4 +1,4 @@
-class Product {
+class ProductEntities {
   final String id;
   final String name;
   final String description;
@@ -9,7 +9,7 @@ class Product {
   final double discountPercentage;
   final List<String> categories;
 
-  const Product({
+  const ProductEntities({
     required this.id,
     required this.name,
     required this.description,
