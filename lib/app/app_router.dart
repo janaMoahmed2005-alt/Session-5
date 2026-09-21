@@ -3,11 +3,13 @@ import 'package:flutter/widgets.dart';
 // import 'package:flutter_application_1/data/external/dio/dio_consumer.dart';
 // import 'package:flutter_application_1/data/repos/product_details_repo_impl.dart';
 import 'package:flutter_application_1/injection_container.dart';
+import 'package:flutter_application_1/presentation/cubit/category/category_cubit.dart';
 import 'package:flutter_application_1/presentation/cubit/products/product_cubit.dart';
 import 'package:flutter_application_1/presentation/cubit/products/product_details_cubit.dart';
 import 'package:flutter_application_1/presentation/screens/product_details_screen.dart';
 import 'package:flutter_application_1/presentation/screens/product_screen.dart';
 import 'package:flutter_application_1/app/routes.dart';
+import 'package:flutter_application_1/presentation/screens/settings_screen.dart';
 import 'package:flutter_application_1/presentation/screens/verification_screen.dart';
 import 'package:flutter_application_1/presentation/screens/sign_up_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,8 +52,15 @@ class AppRouter {
   path: "/${Routes.productScreen}",
   name: Routes.productScreen,
   builder: (context, state) {
-    return BlocProvider(
-      create: (_) => getIt<ProductCubit>()..fetchProducts(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<ProductCubit>()..fetchProducts(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<CategoryCubit>()..getCategories(),
+        ),
+      ],
       child: const ProductScreen(title: "Home Page"),
     );
   },
@@ -66,6 +75,11 @@ GoRoute(
       child: ProcductDetailsScreen(productId: id),
     );
   },
+),
+GoRoute(
+  name: Routes.settingsScreen,
+  path: '/settings',
+  builder: (context, state) => const SettingsScreen(),
 ),
       
     ],

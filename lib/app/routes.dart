@@ -5,5 +5,5 @@ class Routes{
   static const String productDetailsScreen = "ProductDetailsScreen";
   static const String loginScreen = "loginScreen";
    static const String verificationScreen = "verificationScreen";
-
+  static const String settingsScreen = 'settingsScreen';
 }

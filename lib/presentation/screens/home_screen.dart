@@ -246,16 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ),
 ),
 
-BlocBuilder<ThemeCubit, ThemeState>(
-  builder: (context, state) {
-    return Switch(
-      value: state.isDark,
-      onChanged: (value) {
-        context.read<ThemeCubit>().toggleTheme();
-      },
-    );
-  },
-),
+
                     ],
                   ),
                 ],
