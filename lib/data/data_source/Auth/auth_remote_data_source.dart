@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio/dio.dart';
 
 class AuthService {
   final Dio dio = Dio();
@@ -7,6 +6,27 @@ class AuthService {
   final String baseUrl =
       'https://accessories-eshop.runasp.net/api/auth';
 
+Future<Map<String, dynamic>?> login({
+  required String email,
+  required String password,
+}) async {
+  try {
+    final response = await dio.post(
+      '$baseUrl/login',
+      data: {
+        'email': email,
+        'password': password,
+      },
+    );
+
+    print('LOGIN SUCCESS');
+    print('Response: ${response.data}');
+    return response.data; // likely contains a token
+  } on DioException catch (e) {
+    print('LOGIN FAILED: ${e.response?.data}');
+    return null;
+  }
+}
   // =========================
   // REGISTER
   // =========================

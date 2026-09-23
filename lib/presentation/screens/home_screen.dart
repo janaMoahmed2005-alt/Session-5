@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/utils/app_assets.dart';
 import 'package:flutter_application_1/core/widget/custom_text_field.dart';
 import 'package:flutter_application_1/app/routes.dart';
-import 'package:flutter_application_1/core/cubit/theme/theme_cubit.dart';
-import 'package:flutter_application_1/core/cubit/theme/theme_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_application_1/data/data_source/Auth/auth_remote_data_source.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -18,27 +15,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+  final AuthService authService = AuthService();
+  bool isLoading = false;
 
-  final passwordRegex = RegExp(
-    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
-    caseSensitive: false,
-  );
-
-  final emailRegex = RegExp(
-    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    caseSensitive: false,
-  );
+  @override
+  void dispose() {
+    passwordController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(),
-
       body: Column(
         children: [
           SizedBox(
@@ -50,18 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
               fit: BoxFit.cover,
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(16),
-
             child: Form(
               key: formKey,
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16,
                 children: [
-                   Text(
+                  Text(
                     'Sign in to SO',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
@@ -69,27 +61,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   SizedBox(
                     width: double.infinity,
                     height: 54,
-
                     child: ElevatedButton(
                       style: FilledButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        // side: const BorderSide(
-                        //   color: Colors.white,
-                        //   width: 2,
-                        // ),
-                        backgroundColor:Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                       ),
-
                       onPressed: () {
-                        // Handle event button press
+                        // TODO: Google sign-in
                       },
-
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -99,9 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 24,
                             height: 24,
                           ),
-
                           const SizedBox(width: 8),
-
                           const Text(
                             'Sign in with Google',
                             style: TextStyle(
@@ -113,19 +95,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 16,
                     children: [
-                       Text(
+                      Text(
                         'Enter your email',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       CustomTextField(
                         controller: emailController,
                         validator: (value) {
@@ -135,27 +115,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           return null;
                         },
                       ),
-
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                               Text(
+                              Text(
                                 'Password',
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-
                               TextButton(
                                 onPressed: () {
-                                  // Forgot password action
+                                  // TODO: Forgot password
                                 },
-                                child:  Text(
+                                child: Text(
                                   'Forget?',
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.secondary,
@@ -164,9 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
-
                           CustomTextField(
-                            controller: controller,
+                            controller: passwordController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your password';
@@ -176,11 +152,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-
                       SizedBox(
                         width: double.infinity,
                         height: 54,
-
                         child: FilledButton(
                           style: FilledButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -188,65 +162,89 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             backgroundColor: Theme.of(context).colorScheme.primary,
                           ),
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                                  if (!formKey.currentState!.validate()) return;
 
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              context.pushNamed(Routes.productScreen, queryParameters: {
-                                "title": "Product Screen",
-                              });
-                            }
-                          },
+                                  setState(() => isLoading = true);
 
-                          child: const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                                  final result = await authService.login(
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text,
+                                  );
+
+                                  if (!mounted) return;
+                                  setState(() => isLoading = false);
+
+                                  if (result != null) {
+                                    context.pushNamed(
+                                      Routes.productScreen,
+                                      queryParameters: {"title": "Product Screen"},
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Invalid email or password'),
+                                      ),
+                                    );
+                                  }
+                                },
+                          child: isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
                       ),
                       SizedBox(
-  width: double.infinity,
-  height: 54,
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    spacing: 16,
-    children: [
-      Text(
-        'Don\'t have an account?',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.secondary,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-
-      FilledButton(
-        style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-        onPressed: () {
-          // if (formKey.currentState!.validate()) {
-             context.pushNamed(Routes.signUpScreen);
-          // }
-        },
-        child: const Text(
-          'Sign Up',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-
-
+                        width: double.infinity,
+                        height: 54,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 16,
+                          children: [
+                            Text(
+                              "Don't have an account?",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            FilledButton(
+                              style: FilledButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                              onPressed: () {
+                                context.pushNamed(Routes.signUpScreen);
+                              },
+                              child: const Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],

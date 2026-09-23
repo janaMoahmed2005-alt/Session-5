@@ -6,4 +6,6 @@ class Routes{
   static const String loginScreen = "loginScreen";
    static const String verificationScreen = "verificationScreen";
   static const String settingsScreen = 'settingsScreen';
+  static const String onBoarding = "onBoarding";
+  static const String splashScreen = "splashScreen";
 }

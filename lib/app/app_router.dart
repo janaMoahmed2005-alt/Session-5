@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/core/local_storage/base_local_storage.dart';
 // import 'package:flutter_application_1/data/data_source/impl/product_details_data_source_impl.dart';
 // import 'package:flutter_application_1/data/external/dio/dio_consumer.dart';
 // import 'package:flutter_application_1/data/repos/product_details_repo_impl.dart';
@@ -9,7 +10,9 @@ import 'package:flutter_application_1/presentation/cubit/products/product_detail
 import 'package:flutter_application_1/presentation/screens/product_details_screen.dart';
 import 'package:flutter_application_1/presentation/screens/product_screen.dart';
 import 'package:flutter_application_1/app/routes.dart';
+import 'package:flutter_application_1/presentation/screens/on_boarding_screen.dart';
 import 'package:flutter_application_1/presentation/screens/settings_screen.dart';
+import 'package:flutter_application_1/presentation/screens/splash_screen.dart';
 import 'package:flutter_application_1/presentation/screens/verification_screen.dart';
 import 'package:flutter_application_1/presentation/screens/sign_up_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +25,20 @@ class AppRouter {
     routes: [
       GoRoute(
         path: "/",
+        name: Routes.splashScreen,
+        builder: (context, state) {
+          return SplashScreen(localStorage: getIt<BaseLocalStorage>());
+        },
+      ),
+      GoRoute(
+        path: "/${Routes.onBoarding}",
+        name: Routes.onBoarding,
+        builder: (context, state) {
+          return OnboardingScreen(localStorage: getIt<BaseLocalStorage>());
+        },
+      ),
+      GoRoute(
+        path: "/${Routes.homeScreen}",
         name: Routes.homeScreen,
         builder: (context, state) {
           return HomeScreen(title: 'Home');
